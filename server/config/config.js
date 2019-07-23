@@ -24,3 +24,7 @@ if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb+srv://fenix:ikkiavefenix@cluster0-bba2m.mongodb.net/GHDB';
 }
 process.env.URLDB = urlDB;
+
+
+//google client ID
+process.env.CLIENT_ID = process.env.CLIENT_ID || '369964243964-aj457h4mi2fd2tks6na2u5o358gvq4bc.apps.googleusercontent.com';
