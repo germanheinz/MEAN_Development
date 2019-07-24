@@ -91,9 +91,6 @@ app.put('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
                 err
             });
         }
-
-
-
         res.json({
             ok: true,
             usuario: usuarioDB
@@ -103,38 +100,32 @@ app.put('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
 
 });
 
-app.delete('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
+app.delete('/usuario/:id', (req, res) => {
 
 
     let id = req.params.id;
 
-    // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-
-    let cambiaEstado = {
-        estado: false
-    };
-
-    Usuario.findByIdAndUpdate(id, cambiaEstado, { new: true }, (err, usuarioBorrado) => {
+    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
 
         if (err) {
-            return res.status(400).json({
+            return res.status(500).json({
                 ok: false,
                 err
             });
-        };
+        }
 
         if (!usuarioBorrado) {
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'Usuario no encontrado'
+                    message: 'El id no existe'
                 }
             });
         }
 
         res.json({
             ok: true,
-            usuario: usuarioBorrado
+            usuarioBorrado
         });
 
     });
