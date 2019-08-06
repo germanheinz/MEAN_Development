@@ -138,7 +138,7 @@ app.put('/categoria/:id', (req, res) => {
             }
         });
     })
-    //Cargar categorias
+    //Eliminar categorias
 app.delete('/categoria/:id', [verificaToken, verificaRole], (req, res) => {
 
     let id = req.params.id;
