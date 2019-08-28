@@ -6,7 +6,8 @@ const fileUpload = require('express-fileupload');
 const app = express();
 //models
 const Usuario = require('../models/usuario');
-const Producto = require('../models/producto');
+const Album = require('../models/album');
+const Artista = require('../models/artista');
 //Fileupload, Path
 const fs = require('fs');
 const path = require('path');
@@ -28,7 +29,7 @@ app.put('/upload/:tipo/:id', function(req, res) {
             });
     }
     //validar tipo
-    let tiposValidos = ['productos', 'usuarios'];
+    let tiposValidos = ['albums', 'usuarios', 'artistas'];
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400)
             .json({
@@ -75,8 +76,10 @@ app.put('/upload/:tipo/:id', function(req, res) {
         }
         if (tipo == 'usuarios') {
             imagenUsuario(id, res, nombreArchivo);
-        } else {
+        } else if (tipo == 'albums') {
             imagenProducto(id, res, nombreArchivo);
+        } else if (tipo == 'artistas') {
+            imagenArtista(id, res, nombreArchivo);
         }
 
 
@@ -121,34 +124,69 @@ function imagenUsuario(id, res, nombreArchivo) {
 }
 
 function imagenProducto(id, res, nombreArchivo) {
-    Producto.findById(id, (err, ProductoDB) => {
+    Album.findById(id, (err, albumDB) => {
         if (err) {
-            borraArchivo(nombreArchivo, 'productos');
+            borraArchivo(nombreArchivo, 'albums');
             return res.status(500)
                 .json({
                     ok: false,
                     err
                 });
         }
-        if (!ProductoDB) {
-            borraArchivo(nombreArchivo, 'productos');
+        if (!albumDB) {
+            borraArchivo(nombreArchivo, 'albums');
             return res.status(400)
                 .json({
                     ok: false,
                     err: {
-                        message: 'Producto no existe'
+                        message: 'Album no existe'
                     }
                 });
         }
 
-        borraArchivo(ProductoDB.img, 'productos');
+        borraArchivo(albumDB.img, 'albums');
 
-        ProductoDB.img = nombreArchivo;
-        ProductoDB.save((err, ProductoGuardado) => {
+        albumDB.img = nombreArchivo;
+        albumDB.save((err, albumGuardado) => {
 
             res.json({
                 ok: true,
-                Producto: ProductoGuardado,
+                album: albumGuardado,
+                img: nombreArchivo
+            })
+        });
+    });
+}
+
+function imagenArtista(id, res, nombreArchivo) {
+    Artista.findById(id, (err, ArtistaDB) => {
+        if (err) {
+            borraArchivo(nombreArchivo, 'artistas');
+            return res.status(500)
+                .json({
+                    ok: false,
+                    err
+                });
+        }
+        if (!ArtistaDB) {
+            borraArchivo(nombreArchivo, 'artistas');
+            return res.status(400)
+                .json({
+                    ok: false,
+                    err: {
+                        message: 'artistas no existe'
+                    }
+                });
+        }
+
+        borraArchivo(ArtistaDB.img, 'artistas');
+
+        ArtistaDB.img = nombreArchivo;
+        ArtistaDB.save((err, ArtistaGuardado) => {
+
+            res.json({
+                ok: true,
+                Artista: ArtistaGuardado,
                 img: nombreArchivo
             })
         });

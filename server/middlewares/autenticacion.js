@@ -24,17 +24,19 @@ let verificaToken = (req, res, next) => {
 };
 
 //verificar Admin Role
-let verificaRole = (req, res, next) => {
+let verificaRole_o_mismoUser = (req, res, next) => {
 
     let usuario = req.usuario;
+    var id = req.params.id;
 
-    if (usuario.role === 'ADMIN_ROLE') {
+    if (usuario.role === 'ADMIN_ROLE' || usuario._id === id) {
         next();
     } else {
         res.json({
             ok: false,
             err: {
-                message: 'El usuario no es Administrador'
+                message: 'El usuario no es Administrador',
+                errors: { message: 'No es Admin' }
             }
         });
     }
@@ -42,4 +44,4 @@ let verificaRole = (req, res, next) => {
 }
 
 
-module.exports = { verificaToken, verificaRole };
+module.exports = { verificaToken, verificaRole_o_mismoUser };

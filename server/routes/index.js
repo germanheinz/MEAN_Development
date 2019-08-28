@@ -8,10 +8,14 @@ app.use(require('./login'));
 
 app.use(require('./categoria'));
 
-app.use(require('./producto'));
+app.use(require('./album'));
 
 app.use(require('./upload'));
 
 app.use(require('./imagenes'));
+
+app.use(require('./artista'));
+
+app.use(require('./busqueda'));
 
 module.exports = app;

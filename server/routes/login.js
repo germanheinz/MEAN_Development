@@ -15,6 +15,30 @@ const client = new OAuth2Client(process.env.CLIENT_ID);
 const app = express();
 
 
+
+
+
+app.get('/renuevatoken', (req, res) => {
+
+
+    let token = jwt.sign({
+        usuario: req.usuario
+    }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
+
+    res.status(200).json({
+        ok: true,
+        usuario: req.usuario,
+        token
+    });
+
+});
+
+
+
+
+
+
+
 app.post('/login', (req, res) => {
 
 
@@ -51,10 +75,12 @@ app.post('/login', (req, res) => {
             usuario: usuarioDB
         }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
 
-        res.json({
+        return res.json({
             ok: true,
             usuario: usuarioDB,
-            token
+            token,
+            //id: usuario._id,
+            menu: obtenerMenu(usuarioDB.role)
         });
     })
 
@@ -81,7 +107,7 @@ async function verify(token) {
 
 app.post('/google', async(req, res) => {
 
-    let token = req.body.idtoken;
+    let token = req.body.token;
 
     let googleUser = await verify(token)
         .catch(e => {
@@ -120,6 +146,7 @@ app.post('/google', async(req, res) => {
                     ok: true,
                     usuario: usuarioDB,
                     token,
+                    menu: obtenerMenu(usuarioDB.role)
                 });
 
             }
@@ -152,7 +179,9 @@ app.post('/google', async(req, res) => {
                     ok: true,
                     usuario: usuarioDB,
                     token,
+                    menu: obtenerMenu(usuarioDB.role)
                 });
+
 
 
             });
@@ -165,6 +194,34 @@ app.post('/google', async(req, res) => {
 
 });
 
+function obtenerMenu(ROLE) {
+
+    var menu = [{
+            titulo: 'Principal',
+            icono: 'mdi mdi-gauge',
+            submenu: [
+                { titulo: 'Dashboard', url: '/dashboard' },
+                { titulo: 'ProgressBar', url: '/progress' },
+                { titulo: 'Gráficas', url: '/graficas1' },
+                { titulo: 'RXJS', url: '/RXJS' },
+                { titulo: 'perfil', url: '/perfil' }
+            ]
+        },
+        {
+            titulo: 'Musica',
+            submenu: [
+                //{titulo: 'Usuarios', url: '/usuarios'},
+                { titulo: 'Artistas', url: '/artistas' },
+                { titulo: 'Albums', url: '/albums' },
+                { titulo: 'Album', url: '/album' }
+            ]
+        }
+    ];
+    if (ROLE === 'ADMIN_ROLE') {
+        menu[1].submenu.unshift({ titulo: 'Usuarios', url: '/usuarios' });
+    }
+    return menu;
+}
 
 //test
 app.get('/get', (req, res) => {

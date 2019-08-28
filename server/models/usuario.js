@@ -14,11 +14,11 @@ let Schema = mongoose.Schema;
 let usuarioSchema = new Schema({
     nombre: {
         type: String,
-        required: [true, 'El nombre es necesario']
+        required: [false, 'El nombre es necesario']
     },
     email: {
         type: String,
-        unique: true,
+        unique: false,
         required: [true, 'El correo es necesario']
     },
     password: {

@@ -12,6 +12,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 process.env.CADUCIDAD_TOKEN = 60 * 20 * 24 * 20;
 
 process.env.SEED = process.env.SEED || 'este-es-el-seed';
+
+
+
 // ============================
 //  Base de datos
 // ============================
@@ -27,4 +30,9 @@ process.env.URLDB = urlDB;
 
 
 //google client ID
-process.env.CLIENT_ID = process.env.CLIENT_ID || '369964243964-aj457h4mi2fd2tks6na2u5o358gvq4bc.apps.googleusercontent.com';
+
+//process.env.CLIENT_ID = process.env.CLIENT_ID || '369964243964-aj457h4mi2fd2tks6na2u5o358gvq4bc.apps.googleusercontent.com';
+
+
+process.env.CLIENT_ID = process.env.CLIENT_ID || '77121684616-jnmm4otihdmjvgmgdjl750dhqpo633qb.apps.googleusercontent.com';
+//77121684616-jnmm4otihdmjvgmgdjl750dhqpo633qb.apps.googleusercontent.com

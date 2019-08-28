@@ -4,7 +4,7 @@ const app = express();
 
 let Categoria = require('../models/categoria');
 
-const { verificaToken, verificaRole } = require('../middlewares/autenticacion');
+const { verificaToken, verificaRole_o_mismoUser } = require('../middlewares/autenticacion');
 
 
 //mostrat todas las categorias
@@ -139,7 +139,7 @@ app.put('/categoria/:id', (req, res) => {
         });
     })
     //Eliminar categorias
-app.delete('/categoria/:id', [verificaToken, verificaRole], (req, res) => {
+app.delete('/categoria/:id', [verificaToken, verificaRole_o_mismoUser], (req, res) => {
 
     let id = req.params.id;
 

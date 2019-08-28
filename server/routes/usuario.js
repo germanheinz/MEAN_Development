@@ -6,12 +6,13 @@ const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
 
-const { verificaToken, verificaRole } = require('../middlewares/autenticacion');
+const { verificaToken, verificaRole_o_mismoUser } = require('../middlewares/autenticacion');
 
 const app = express();
 
 
-app.get('/usuario', verificaToken, function(req, res) {
+
+app.get('/usuarios', function(req, res) {
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
@@ -45,8 +46,37 @@ app.get('/usuario', verificaToken, function(req, res) {
 
 
 });
+// ===========================
+//  Buscar Usuarios
+// ===========================
+app.get('/usuarios/buscar/:termino', (req, res) => {
 
-app.post('/usuario', [verificaToken, verificaRole], function(req, res) {
+    let termino = req.params.termino;
+
+    let regex = new RegExp(termino, 'i');
+
+    Usuario.find({ nombre: regex })
+        //.populate('email', 'nombre')
+        .exec((err, usuarios) => {
+
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.json({
+                ok: true,
+                usuarios
+            })
+
+        })
+});
+
+//app.post('/usuario', [verificaToken, verificaRole], function(req, res) {
+app.post('/usuario', function(req, res) {
 
     let body = req.body;
 
@@ -78,7 +108,8 @@ app.post('/usuario', [verificaToken, verificaRole], function(req, res) {
 
 });
 
-app.put('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
+//app.put('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
+app.put('/usuario/:id', function(req, res) {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
@@ -100,7 +131,7 @@ app.put('/usuario/:id', [verificaToken, verificaRole], (req, res) => {
 
 });
 
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', verificaToken, (req, res) => {
 
 
     let id = req.params.id;
@@ -123,7 +154,7 @@ app.delete('/usuario/:id', (req, res) => {
             });
         }
 
-        res.json({
+        return res.status(200).json({
             ok: true,
             usuarioBorrado
         });
